@@ -29,6 +29,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "prisma/seed.ts"
-  ],
+, "components/youtube-embed.tsx", "scripts/match-youtube-extract-to-db-episodes.js"  ],
   "exclude": ["node_modules"]
 }

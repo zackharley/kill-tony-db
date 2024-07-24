@@ -1,0 +1,193 @@
+[
+  {
+    "episodeId": 652,
+    "appearances": [
+      {
+        "seconds": 350,
+        "name": "Jelly Roll",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1Hpmk6xgXLw?t=350",
+        "type": "other"
+      },
+      {
+        "personId": 319,
+        "seconds": 1269,
+        "name": "Hans Kim",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1Hpmk6xgXLw?t=1269",
+        "type": "regular"
+      },
+      {
+        "seconds": 1750,
+        "name": "Yasmina Coker",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1Hpmk6xgXLw?t=1750",
+        "isStandupDebut": true
+      },
+      {
+        "seconds": 2263,
+        "name": "John Rice",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1Hpmk6xgXLw?t=2263"
+      },
+      {
+        "seconds": 3259,
+        "name": "Holden Deshazo",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1Hpmk6xgXLw?t=3259"
+      },
+      {
+        "seconds": 3980,
+        "name": "Destiny Lalane",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1Hpmk6xgXLw?t=3980"
+      },
+      {
+        "seconds": 4492,
+        "name": "Grant Kelly",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1Hpmk6xgXLw?t=4492"
+      },
+      {
+        "personId": 422,
+        "seconds": 4969,
+        "name": "Heath Cordes",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1Hpmk6xgXLw?t=4969",
+        "type": "featured_set"
+      },
+      {
+        "seconds": 5453,
+        "name": "Cynthia",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1Hpmk6xgXLw?t=5453"
+      },
+      {
+        "seconds": 5911,
+        "name": "Pablo T",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1Hpmk6xgXLw?t=5911"
+      },
+      {
+        "seconds": 6196,
+        "name": "Nicole Tran",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1Hpmk6xgXLw?t=6196",
+        "type": "featured_set"
+      },
+      {
+        "seconds": 6710,
+        "name": "Edward Sirobas",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1Hpmk6xgXLw?t=6710"
+      },
+      {
+        "seconds": 6888,
+        "name": "Nikki Coleman",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1Hpmk6xgXLw?t=6888"
+      },
+      {
+        "personId": 369,
+        "seconds": 7512,
+        "name": "Kam Patterson",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1Hpmk6xgXLw?t=7512",
+        "type": "regular"
+      },
+      {
+        "seconds": 7873,
+        "name": "Pedro Lueza",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1Hpmk6xgXLw?t=7873"
+      },
+      {
+        "personId": 268,
+        "seconds": 8574,
+        "name": "Brian Holtzman",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1Hpmk6xgXLw?t=8574",
+        "type": "featured_set"
+      },
+      {
+        "personId": 394,
+        "seconds": 9121,
+        "name": "Austin Young",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1Hpmk6xgXLw?t=9121"
+      },
+      {
+        "personId": 258,
+        "seconds": 9666,
+        "name": "William Montgomery",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1Hpmk6xgXLw?t=9666",
+        "type": "regular"
+      }
+    ]
+  },
+  {
+    "episodeId": 654,
+    "appearances": [
+      {
+        "personId": 319,
+        "seconds": 540,
+        "name": "Hans Kim",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1igNHp87LM0?t=540",
+        "type": "regular"
+      },
+      {
+        "seconds": 907,
+        "name": "Ric Diez",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1igNHp87LM0?t=907",
+        "type": "other"
+      },
+      {
+        "seconds": 1485,
+        "name": "Corduroy Xavier",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1igNHp87LM0?t=1485"
+      },
+      {
+        "seconds": 2249,
+        "name": "Daniel Zalinka",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1igNHp87LM0?t=2249"
+      },
+      {
+        "personId": 407,
+        "seconds": 2785,
+        "name": "Justin Hedrick",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1igNHp87LM0?t=2785",
+        "type": "featured_set"
+      },
+      {
+        "seconds": 3208,
+        "name": "Walt Barber",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1igNHp87LM0?t=3208"
+      },
+      {
+        "personId": 369,
+        "seconds": 3558,
+        "name": "Kam Patterson",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1igNHp87LM0?t=3558",
+        "type": "regular"
+      },
+      {
+        "personId": 440,
+        "seconds": 3997,
+        "name": "Matt Robertson",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1igNHp87LM0?t=3997"
+      },
+      {
+        "seconds": 4325,
+        "name": "Zack Hedrick",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1igNHp87LM0?t=4325"
+      },
+      {
+        "personId": 30,
+        "seconds": 4851,
+        "name": "Pauly Shore",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1igNHp87LM0?t=4851",
+        "type": "featured_set"
+      },
+      {
+        "seconds": 5674,
+        "name": "Priya Blunts",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1igNHp87LM0?t=5674"
+      },
+      {
+        "seconds": 6115,
+        "name": "Davey Jackson",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1igNHp87LM0?t=6115"
+      },
+      {
+        "personId": 258,
+        "seconds": 6580,
+        "name": "William Montgomery",
+        "youtubeUrlWithTimestamp": "https://youtu.be/1igNHp87LM0?t=6580",
+        "type": "regular"
+      }
+    ]
+  }
+]

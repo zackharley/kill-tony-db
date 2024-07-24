@@ -1,0 +1,1450 @@
+import { config } from 'dotenv';
+config({ path: '.env.local' });
+import { PrismaClient } from '@prisma/client';
+
+const spotifyData = [
+  [
+    '#650 - BERT KREISCHER - BOBBY LEE - ESTHER POVITSKY',
+    'https://open.spotify.com/episode/2B38tbw1xRNJnDo2ihTnl2',
+  ],
+  [
+    '#649 - HARLAND WILLIAMS + YANNIS PAPPAS',
+    'https://open.spotify.com/episode/7I58h9KvqhLuzYPHYmkZyl',
+  ],
+  [
+    '#648 - SHANE GILLIS + MATT MCCUSKER - NYE HEB ARENA',
+    'https://open.spotify.com/episode/1FKxGHfgctcXBbFiwbVFAv',
+  ],
+  [
+    '#647 - DR PHIL (ADAM RAY) - HEB ARENA DAY ONE',
+    'https://open.spotify.com/episode/18cQS2VlS0mHdkOLYLXUSm',
+  ],
+  [
+    '#646 - DERIC POSTON + EHSAN AHMAD',
+    'https://open.spotify.com/episode/6KiYRPWrLu4CTLxfdmFJHs',
+  ],
+  [
+    '#645- LOUIS KATZ',
+    'https://open.spotify.com/episode/3MU0T8H8w4uBmagZO2MDLj',
+  ],
+  [
+    '#644 - KIRK FOX',
+    'https://open.spotify.com/episode/5Ksx00jNgyUcs1HanhfdXk',
+  ],
+  [
+    '#643 - THE REGULARS',
+    'https://open.spotify.com/episode/45yTO24YMiLjCc83a89zx7',
+  ],
+  [
+    '#642 - ARI SHAFFIR + MARK NORMAND + SAM TALLENT',
+    'https://open.spotify.com/episode/5umL0JpHDUaWA3vmLOtbr0',
+  ],
+  [
+    '#641 - HOWIE MANDEL',
+    'https://open.spotify.com/episode/7xxxP5p2V6a1xnZUpJst6e',
+  ],
+  [
+    '#640 - STAVROS HALKIAS',
+    'https://open.spotify.com/episode/5dZFGXIbrn1dvyBnfKtkEl',
+  ],
+  [
+    '#639 - TIM DILLON',
+    'https://open.spotify.com/episode/05o3EvQfBXyJMzVQdWzdN4',
+  ],
+  [
+    '#638 - GREG FITZSIMMONS + DAVE SMITH',
+    'https://open.spotify.com/episode/3mZftvpg7gdB7S4IWvzNfy',
+  ],
+  [
+    '#637 - STEVEO + ADRIENNE IAPALUCCI',
+    'https://open.spotify.com/episode/50b2tLcXdCCsguNDrreXvb',
+  ],
+  [
+    '#636 - RON WHITE + PAULY SHORE',
+    'https://open.spotify.com/episode/3NzGEcMGSsr1oxPbKAAcOy',
+  ],
+  [
+    "#635 - DUNCAN TRUSSELL + LIL' HOBO",
+    'https://open.spotify.com/episode/6Vbx3QD6vB4hl2GfhpxWm0',
+  ],
+  [
+    '#634 - YANNIS PAPPAS + RYAN SICKLER + MIKE FEENEY',
+    'https://open.spotify.com/episode/3b38TcyQiPYzgi86OZWpD7',
+  ],
+  [
+    '#633 - KAM PATTERSON + DAVID JOLLY',
+    'https://open.spotify.com/episode/6sB2ES2g8ypwqAeZjWHpzH',
+  ],
+  [
+    "#632 - SUGA SEAN O'MALLEY + JOE LIST",
+    'https://open.spotify.com/episode/0p3gooXcpfRYg9NmzUp9i8',
+  ],
+  [
+    '#631 - KIM CONGDON + JAMAR NEIGHBOORS',
+    'https://open.spotify.com/episode/2ymKVY9ALS1CE0Epqow9pZ',
+  ],
+  [
+    '#630 - DR. PHIL (ADAM RAY) + SAM TALLENT',
+    'https://open.spotify.com/episode/2GLNNsYcXd1nBAw84rHN5e',
+  ],
+  [
+    '#629 - RIC FLAIR - SHANE GILLIS - ARI SHAFFIR - MARK NORMAND - LUIS J GOMEZ - ZAC AMICO',
+    'https://open.spotify.com/episode/76HEPliTWVuYvKHrC8aqtA',
+  ],
+  [
+    '#628 - H. FOLEY + KEVIN RYAN',
+    'https://open.spotify.com/episode/5kXWtMTNHwZmVOLLJxQQtL',
+  ],
+  [
+    '#627 - ROSEANNE + DAVID KOECHNER',
+    'https://open.spotify.com/episode/6mbkgYHInUEciiLe6LICw3',
+  ],
+  [
+    '#626 - JOE DEROSA + DAVID LUCAS',
+    'https://open.spotify.com/episode/12PGyVjMveAf8S4w3nkIvR',
+  ],
+  [
+    '#625 - POST MALONE + JOE ROGAN + KURT METZGER',
+    'https://open.spotify.com/episode/2DepkRhLfi2bYrkKBo01De',
+  ],
+  [
+    '#624 - THAI RIVERA',
+    'https://open.spotify.com/episode/0WeaeYhQIvb8jXPHWLNFNM',
+  ],
+  [
+    '#623 - BRIAN MOSES + MATTHEW BROUSSARD',
+    'https://open.spotify.com/episode/6PJGd2KKGMPBtO8N1XMnIB',
+  ],
+  [
+    '#622 - JIM NORTON',
+    'https://open.spotify.com/episode/6wHqwMMpVLjIVHVcDxGQb6',
+  ],
+  [
+    '#621 - DON BARRIS',
+    'https://open.spotify.com/episode/4GJV0HypkdmHWqBWKkdqMw',
+  ],
+  [
+    '#620 - RICH VOS - ADAM RAY',
+    'https://open.spotify.com/episode/24KsVopy9M9RjxHKFVIvPJ',
+  ],
+  [
+    '#619 - ARI SHAFFIR',
+    'https://open.spotify.com/episode/0zHHx2JLQ5xovhCYzJzONw',
+  ],
+  [
+    '#618 - TREVOR WALLACE + BRIAN SIMPSON',
+    'https://open.spotify.com/episode/6hH2uIh6SdFW4CLlwEchIK',
+  ],
+  [
+    '#617 - ALI SIDDIQ',
+    'https://open.spotify.com/episode/7N3bRvSt2T63XaKALbOiOj',
+  ],
+  [
+    '#616 - JOE ROGAN + TOM SEGURA [10 YEAR ANNIVERSARY]',
+    'https://open.spotify.com/episode/5qM59D3qqX8UaZmnNxCoRm',
+  ],
+  [
+    '#615 - THEO VON',
+    'https://open.spotify.com/episode/1PR86FpfmasnWKoXWTOmSZ',
+  ],
+  [
+    '#614 - DAVE ATTELL + JEFF ROSS',
+    'https://open.spotify.com/episode/2RcsWjw08qp7KBBqJGCo1E',
+  ],
+  [
+    '#613 - ELEANOR KERRIGAN',
+    'https://open.spotify.com/episode/5GJfHbn6Uz2IOZ2LYHrlMo',
+  ],
+  [
+    '#612 - DOUG STANHOPE',
+    'https://open.spotify.com/episode/6V8RRfvSjtP93TNt5YgO1V',
+  ],
+  [
+    '#611 - BRIAN HOLTZMAN + IAN EDWARDS',
+    'https://open.spotify.com/episode/1FnxjP5CPqYZx7HYEe4asT',
+  ],
+  [
+    '#610 - PAULY SHORE + ERIK GRIFFIN',
+    'https://open.spotify.com/episode/1izx0wxzmz3Y2PmEaLH5Te',
+  ],
+  [
+    '#609 - IAN FIDANCE + JOY HINCHCLIFFE',
+    'https://open.spotify.com/episode/1CMtpJE5ai8aWw5nKOwS5Q',
+  ],
+  [
+    '#608 - ADAM RAY',
+    'https://open.spotify.com/episode/12N9w4zP5CXVRL19ZXTSN0',
+  ],
+  [
+    '#607 - SAM TALLENT',
+    'https://open.spotify.com/episode/1QQJP6mK2aX5vrFvKY7Shv',
+  ],
+  [
+    '#606 - ARI SHAFFIR + BIG JAY OAKERSON',
+    'https://open.spotify.com/episode/724KcxtKYYwqRbcRT1NftJ',
+  ],
+  [
+    '#605 - KEVIN RYAN + H FOLEY + YANNIS PAPPAS',
+    'https://open.spotify.com/episode/1niSTkr0eq71gK8fBOAQ3a',
+  ],
+  [
+    '#604 - RON WHITE',
+    'https://open.spotify.com/episode/1aaf0ipiyPZ5qvyjrmHAah',
+  ],
+  [
+    '#603 - SHANE GILLIS',
+    'https://open.spotify.com/episode/3aLhXgnrRwHfZFgs9SE4aW',
+  ],
+  [
+    '#602 - BERT KREISCHER + WHITNEY CUMMINGS + JIM NORTON',
+    'https://open.spotify.com/episode/3wd1kx223id7l1RHWLyDY7',
+  ],
+  [
+    '#601 - TIM DILLON + ROSEANNE',
+    'https://open.spotify.com/episode/5iuwdk9OQnzmiQou5ZQkSs',
+  ],
+  [
+    '#600 - CHRIS DISTEFANO',
+    'https://open.spotify.com/episode/4EeAEdcBOB8NgBxHGOymaP',
+  ],
+  [
+    '#599 - ROSEANNE',
+    'https://open.spotify.com/episode/373jJ74URIzpzdjneZIFFI',
+  ],
+  [
+    '#598 - BRIAN MOSES + THAI RIVERA',
+    'https://open.spotify.com/episode/15K7y3OOJ5tTDyuSuoQ7y9',
+  ],
+  [
+    '#597 - JIM FLORENTINE + PUNKIE JOHNSON + EDDIE PEPITONE',
+    'https://open.spotify.com/episode/72YRwTmu5Q1eNqTSvhbHtd',
+  ],
+  [
+    '#596 - ALI MACOFSKY',
+    'https://open.spotify.com/episode/3XXIBO7adPLbgUo2IqzyzY',
+  ],
+  [
+    '#595 - TOM PAPA',
+    'https://open.spotify.com/episode/17uQJGa18lpveausPtkvjY',
+  ],
+  [
+    '#594 - ADAM RAY + JOE DEROSA',
+    'https://open.spotify.com/episode/5FdjBgQUYp2cLBAM1tzqDu',
+  ],
+  [
+    '#593 - ANDREW SANTINO + IAN EDWARDS + KIM CONGDON + SARAH WEINSHENK',
+    'https://open.spotify.com/episode/2PgfMDvEqHqSzRFqFQTDkc',
+  ],
+  [
+    '#592 - JOE ROGAN + JESSIE JOHNSON',
+    'https://open.spotify.com/episode/4I7Xvf5LrJTDRWeLP1LId6',
+  ],
+  [
+    '#591 - DAVID & LUNA LUCAS',
+    'https://open.spotify.com/episode/61kYYrNxK9JLWCkIMXqUNq',
+  ],
+  [
+    '#590 - ADAM EGET',
+    'https://open.spotify.com/episode/4T1zJ2JPwxqpnAVN03LIxd',
+  ],
+  [
+    '#589 - RON WHITE',
+    'https://open.spotify.com/episode/0GW5p5rqNJMiyeKpjJzNkd',
+  ],
+  [
+    '#588 - BRIAN SIMPSON',
+    'https://open.spotify.com/episode/3zcX4ru1nzp7s066S1jIYT',
+  ],
+  [
+    '#587 - KURT METZGER',
+    'https://open.spotify.com/episode/5iWKNTVXr6X0rOHvTJSwju',
+  ],
+  [
+    '#586 - DEADMAU5 + GEORGE PEREZ',
+    'https://open.spotify.com/episode/4IJ7gAPkDyaNV7dSmAKyQc',
+  ],
+  [
+    '#585 - TOM SEGURA',
+    'https://open.spotify.com/episode/1u7LujSr777coPcnTEmzc7',
+  ],
+  [
+    '#584 - RYAN LONG + CHRIS FAGA',
+    'https://open.spotify.com/episode/00VRG9TZM0flNCwHKpahih',
+  ],
+  [
+    '#583 - TIM DILLON',
+    'https://open.spotify.com/episode/0dilg2OhQrdOEKIZkkWRk4',
+  ],
+  [
+    '#582 - [SKANKFEST VEGAS] - BIG JAY OAKERSON + LUIS J GOMEZ + DAVE SMITH',
+    'https://open.spotify.com/episode/2VAkp96G4QVRCACrBm8Lv4',
+  ],
+  [
+    '#581 - [SKANKFEST VEGAS] DAVE ATTELL + IAN FIDANCE + ERIK GRIFFIN',
+    'https://open.spotify.com/episode/3Ax4yQ1LDKLOlnEJwyrhuH',
+  ],
+  [
+    '#580 - DERIC POSTON + EHSAN AHMAD',
+    'https://open.spotify.com/episode/7u4dkZIIF2BR9l3vGI10RZ',
+  ],
+  [
+    '#579 - HANS KIM + WILLIAM MONTGOMERY + DAVID LUCAS',
+    'https://open.spotify.com/episode/6wuGhFAvPjbtfDUbilHrfd',
+  ],
+  [
+    '#578 - DAVE ATTELL + GREG FITZSIMMONS + IAN FIDANCE',
+    'https://open.spotify.com/episode/2Lwi3gOwEuYS3f4TveA8o0',
+  ],
+  [
+    '#577 - DUNCAN TRUSSELL',
+    'https://open.spotify.com/episode/5IWbSP5OHCQ4IWc5quTP9V',
+  ],
+  [
+    '#576 - JOSH WOLF + MIKE FEENEY',
+    'https://open.spotify.com/episode/6pufndhz7SOgkbC28RZ4bF',
+  ],
+  [
+    '#575 - RON WHITE + BRIAN SIMPSON + RYAN LONG',
+    'https://open.spotify.com/episode/1t4ZVTbMmou1VWjZgF4vNH',
+  ],
+  [
+    '#574 - JOE ROGAN + SHANE GILLIS + MARK NORMAND + ARI SHAFFIR',
+    'https://open.spotify.com/episode/63dxRu4ISRG8XseIIXxR9V',
+  ],
+  [
+    '#573 - JOE ROGAN',
+    'https://open.spotify.com/episode/29iiLsBuUNVDnXC9cPTiYu',
+  ],
+  [
+    '#572 - IAN FIDANCE + THAI RIVERA',
+    'https://open.spotify.com/episode/6IhPxuEYTYH44KrLZcjJw8',
+  ],
+  [
+    '#571 - JEFF ROSS',
+    'https://open.spotify.com/episode/0V3zlRMgQ0PMxgvZzxa0dB',
+  ],
+  [
+    '#570 - ANNIE LEDERMAN',
+    'https://open.spotify.com/episode/1uEsqYILRbV1EVQujyLR1W',
+  ],
+  [
+    '#569 - THEO VON',
+    'https://open.spotify.com/episode/5OydJ0qmBrUSvU5mNGnEw5',
+  ],
+  [
+    '#568 - ERIK GRIFFIN',
+    'https://open.spotify.com/episode/4kSr5EOydY0hDMJ076ksEZ',
+  ],
+  [
+    '#567 - MARY LYNN RAJSKUB',
+    'https://open.spotify.com/episode/5ZWv3D9NthqhjjG1o2oACw',
+  ],
+  [
+    '#566 - LUIS J GOMEZ + AARON BERG',
+    'https://open.spotify.com/episode/3DIpjsa9WUENuHAegkNdwv',
+  ],
+  [
+    '#565 - SHANE GILLIS + MARK NORMAND',
+    'https://open.spotify.com/episode/1JrewBAoZGfQ7qJ95fLKXW',
+  ],
+  [
+    "#564 - THE MONTGOMERY'S",
+    'https://open.spotify.com/episode/6vpkupgGozKLLx1SRghRb8',
+  ],
+  [
+    '#563 - PAULY SHORE',
+    'https://open.spotify.com/episode/3UGXafP3DzGtEbS8Ne69jK',
+  ],
+  [
+    '#562 - FAHIM ANWAR',
+    'https://open.spotify.com/episode/0tJgk6Ao4fzgwrIylvQl9x',
+  ],
+  [
+    '#561 - ARI SHAFFIR + CHRIS DISTEFANO',
+    'https://open.spotify.com/episode/44nLBQT1mdIZdSZBNcrCSv',
+  ],
+  [
+    '#560 - DERIC POSTON',
+    'https://open.spotify.com/episode/4FRnE05d5hBVFSFlscVoDL',
+  ],
+  [
+    '#559 - GARY CLARK JR',
+    'https://open.spotify.com/episode/0qSM2liPfa5bQXGyuWkzyg',
+  ],
+  [
+    '#558 - DUNCAN TRUSSELL + DOUG STANHOPE + MICHAEL YO',
+    'https://open.spotify.com/episode/11pjxyFOpCAyCYKgHfRuIE',
+  ],
+  [
+    '#557 - H. FOLEY + KEVIN RYAN',
+    'https://open.spotify.com/episode/2LwvG4oNOB6RAcyEJJp760',
+  ],
+  [
+    '#556 - JAKE SHIELDS + BRIAN SIMPSON',
+    'https://open.spotify.com/episode/2qwfIPPImDEuq2zFzoIMXB',
+  ],
+  [
+    '#555 - RACHEL WOLFSON + MAT EDGAR',
+    'https://open.spotify.com/episode/4yUkVy0WJNlJlwy3DfGOJd',
+  ],
+  [
+    '#554 - MONTY FRANKLIN',
+    'https://open.spotify.com/episode/0xlq5qADPj6fJLURDyCQ5W',
+  ],
+  [
+    '#553 - JESSIE JOHNSON',
+    'https://open.spotify.com/episode/5QpZ3iCf7cnGQTLzs05l8G',
+  ],
+  [
+    '#552 - PUNKIE JOHNSON + DICEY',
+    'https://open.spotify.com/episode/0YWBwe7OcH6Dbv6XZCJqG7',
+  ],
+  [
+    '#551 - JOSH BARNETT',
+    'https://open.spotify.com/episode/1kCBFLCU0q4qyNsZIKImd8',
+  ],
+  [
+    '#550 - RICH VOS + WILLIE HUNTER',
+    'https://open.spotify.com/episode/7FmdBiwB23Mt1I0aosuPW4',
+  ],
+  [
+    '#549 - TOM PAPA',
+    'https://open.spotify.com/episode/4MFqVysUqaS0o9slu2Kl35',
+  ],
+  [
+    '#548 - JOE ROGAN + FREDDIE GIBBS + BRIAN MOSES',
+    'https://open.spotify.com/episode/3zHfKpERkGa2GzqCS6fjE0',
+  ],
+  [
+    '#547 - BRENDON WALSH + MATT FULCHIRON',
+    'https://open.spotify.com/episode/28WDEywfX2JAVSpIocBUF3',
+  ],
+  [
+    '#546 - RON WHITE',
+    'https://open.spotify.com/episode/0P5XmpDM02CPzySxeULK92',
+  ],
+  [
+    '#545 - AKAASH SINGH',
+    'https://open.spotify.com/episode/0EgaHKSHKmSLO99RjwHaGQ',
+  ],
+  [
+    '#544 - DAVE SMITH',
+    'https://open.spotify.com/episode/336HyWVeKqb6DXXr1DE2DU',
+  ],
+  [
+    '#543 - TONY HINCHCLIFFE + BRIAN REDBAN',
+    'https://open.spotify.com/episode/7e2yPzNJCMNLBzcD02HbXq',
+  ],
+  [
+    '#542 - DANNY BROWN + JPEGMAFIA',
+    'https://open.spotify.com/episode/3UhViLSEsQMmtyr5Jk7YP5',
+  ],
+  [
+    '#541 - BENJI AFLALO',
+    'https://open.spotify.com/episode/57mZbcGGJaiBWCR7Cm0mus',
+  ],
+  [
+    '#540 - EHSAN AHMAD',
+    'https://open.spotify.com/episode/0pZnfrPcgCsWSoFdjiVE2W',
+  ],
+  [
+    '#539 - RYAN J EBELT',
+    'https://open.spotify.com/episode/0XWwdJtY2rF9ie902fIfx8',
+  ],
+  [
+    '#538 - DAVID LUCAS',
+    'https://open.spotify.com/episode/0wEJyHc6Ey9uQtvUNouooL',
+  ],
+  [
+    '#537 - DYLAN SULLIVAN',
+    'https://open.spotify.com/episode/6CZNfCqeuXRsAiLukD0etT',
+  ],
+  [
+    '#536 - WILLIAM MONTGOMERY',
+    'https://open.spotify.com/episode/1aCCvpRUUwiblud0KQI6S7',
+  ],
+  [
+    '#535 - HANS KIM',
+    'https://open.spotify.com/episode/6oAVPXGJQSKfSTp8wfLGpf',
+  ],
+  [
+    '#534 - CHRIS TELLEZ',
+    'https://open.spotify.com/episode/4N42E1QSHt5Wv42M75lTbM',
+  ],
+  [
+    '#533 - ARIELLE ISAAC NORMAN',
+    'https://open.spotify.com/episode/3H2hkOUgFz66p49WILtr6p',
+  ],
+  [
+    '#532 - RON WHITE',
+    'https://open.spotify.com/episode/301ICtowoE9mQjNvMuHvhj',
+  ],
+  [
+    '#531 - KIM CONGDON + SARA WEINSHENK',
+    'https://open.spotify.com/episode/2a0g4QdGxxTho6gE7uv0q6',
+  ],
+  [
+    '#530 - JUSTIN MARTINDALE',
+    'https://open.spotify.com/episode/7g7l5BR0FvbGpUKsKuqAqX',
+  ],
+  [
+    '#529 - WILLIAM MONTGOMERY',
+    'https://open.spotify.com/episode/7F6d9fEIRhj4PiOXDgM2XO',
+  ],
+  [
+    '#528 - HANS KIM',
+    'https://open.spotify.com/episode/0J7Hy9WJNO6IoStquuSNLt',
+  ],
+  [
+    '#527 - JAMAR NEIGHBORS + BRIAN MOSES',
+    'https://open.spotify.com/episode/1h8xF9YWbMpEUB2O90jyIb',
+  ],
+  [
+    '#526 - JOE ROGAN + BERT KREISCHER + DOM IRERRA',
+    'https://open.spotify.com/episode/1XjFUDUCbWeoiDSjcBBNVL',
+  ],
+  [
+    '#525 - SHANE GILLIS + MITCH BURROW',
+    'https://open.spotify.com/episode/2o4Xjl2OUL7VVh59yud4Va',
+  ],
+  [
+    '#524 - KYLE DUNNIGAN + KURT METZGER',
+    'https://open.spotify.com/episode/7IPwx9W90KAJJ1KSDIe3p4',
+  ],
+  [
+    '#523- ALEX JONES',
+    'https://open.spotify.com/episode/6PLc2tWGzEGGtDbthm4tSs',
+  ],
+  [
+    '#522 - CHRISTINA PAZSITZKY',
+    'https://open.spotify.com/episode/6T07kho9ONnIaNMROVVawW',
+  ],
+  [
+    '#521 - JOE ROGAN + ELEANOR KERRIGAN',
+    'https://open.spotify.com/episode/3EZuQaiJhHVP7tnGcfgpje',
+  ],
+  [
+    '#520 - JIMMY SHUBERT',
+    'https://open.spotify.com/episode/2wzHef7EvubEnoK2w3jdja',
+  ],
+  [
+    '#519 - BRIAN HOLTZMAN',
+    'https://open.spotify.com/episode/63u2ZDKH6xgrqd4W9h8Cy6',
+  ],
+  [
+    '#518 - MICHAEL LEHRER',
+    'https://open.spotify.com/episode/4uidzJ1ZMLu4jdWhEGJ5Vt',
+  ],
+  [
+    '#517 - GREG FITZSIMMONS',
+    'https://open.spotify.com/episode/4tPrFmXuMIswgFgs8qMtEF',
+  ],
+  [
+    '#516 - PAULY SHORE + JOSH MARTIN',
+    'https://open.spotify.com/episode/6goC3p4UJUJuRdovhU6wXK',
+  ],
+  [
+    '#515 - SHANE GILLIS',
+    'https://open.spotify.com/episode/4va4eGiLDlkJGD4UuXHIbc',
+  ],
+  [
+    '#514 - DAVID LUCAS',
+    'https://open.spotify.com/episode/68YPjh3kvKlE79C0b1lI83',
+  ],
+  [
+    '#513 - WILLIAM MONTGOMERY',
+    'https://open.spotify.com/episode/5Kfs6tEKpxIr314cnENm8h',
+  ],
+  [
+    '#512 - RON WHITE',
+    'https://open.spotify.com/episode/40wRYjkoLgjL2jieaG0rEC',
+  ],
+  [
+    '#511- DANNY BROWN',
+    'https://open.spotify.com/episode/6zq326ko7MPqUTqTiGXqxB',
+  ],
+  [
+    '#510 - ALEX JONES',
+    'https://open.spotify.com/episode/1My2hNPxUrptvJOGXyR0nI',
+  ],
+  [
+    '#509 - LUIS J GOMEZ + ZAC AMICO',
+    'https://open.spotify.com/episode/37TBRvdiQwdWh40Q5OirGo',
+  ],
+  [
+    '#508 - RON WHITE + RUSSELL PETERS',
+    'https://open.spotify.com/episode/3YbyjqSB7b5AAfESJkLNQx',
+  ],
+  [
+    '#507 - JESSICA MICHELLE SINGLETON',
+    'https://open.spotify.com/episode/6uDFdNnumxqxHx0vg9vDc8',
+  ],
+  [
+    '#506 - BRIAN HOLTZMAN',
+    'https://open.spotify.com/episode/2wJz6VH25qwAhKuY7EIeEp',
+  ],
+  [
+    '#505 - TIM DILLON',
+    'https://open.spotify.com/episode/3ZR1W3JgdH8sc1lvvdq2JO',
+  ],
+  [
+    '#504 - ALI MACOFSKY + MARK NORMAND',
+    'https://open.spotify.com/episode/1M98pfyFe5UYaGAkwE2LiH',
+  ],
+  [
+    '#503 - DERRIC POSTON',
+    'https://open.spotify.com/episode/17vUS2wCxJl1uBZgFTInyT',
+  ],
+  [
+    '#502 - ADAM RAY + JADE CATTA-PRETA',
+    'https://open.spotify.com/episode/6Ge7RO4dZCjMthIcV6WnuB',
+  ],
+  [
+    '#501 - RON WHITE',
+    'https://open.spotify.com/episode/0YcIfY494wCWhEZ7LgYAuR',
+  ],
+  [
+    '#500 - JOE ROGAN',
+    'https://open.spotify.com/episode/2y0gV6nG6XMvpLClLl453o',
+  ],
+  [
+    '#499 - DONNELL RAWLINGS',
+    'https://open.spotify.com/episode/18NZpmBKwRYsnEO7n2hXIT',
+  ],
+  [
+    '#498 - JOE ROGAN + ADAM EGET',
+    'https://open.spotify.com/episode/73dmMVktucT99RmtMESyIl',
+  ],
+  [
+    '#497 - SARA WEINSHENK + JAMAR NEIGHBORS',
+    'https://open.spotify.com/episode/75UcBojzRaW1orVWZXtj53',
+  ],
+  [
+    '#496 - MIAMI #2 - JIMMY SHUBERT',
+    'https://open.spotify.com/episode/6jMnwUfXyYxJL2kZDZBnZE',
+  ],
+  [
+    '#495 - MIAMI - BENJI AFLALO',
+    'https://open.spotify.com/episode/6CYnIGJQ6O7FEqGRHWhoe7',
+  ],
+  [
+    '#494 - JOE ROGAN + BRIAN MOSES',
+    'https://open.spotify.com/episode/0ou2X1aGGn3WYrxOtmU69J',
+  ],
+  [
+    '#493 - BRIAN HOLTZMAN',
+    'https://open.spotify.com/episode/1UDuTFDesLCM7zgRdbJodV',
+  ],
+  ['KILL TONY #492', 'https://open.spotify.com/episode/4o1evNw8X0LfrItYGn0IqQ'],
+  ['KILL TONY #489', 'https://open.spotify.com/episode/2cI4ER5TNEN0uVbJ2nelZI'],
+  ['KILL TONY #491', 'https://open.spotify.com/episode/4PWGlk6MPYBXGwQbCe0xCH'],
+  ['KILL TONY #490', 'https://open.spotify.com/episode/5F6UFOAWpsBItGlGhmo0LS'],
+  ['KILL TONY #488', 'https://open.spotify.com/episode/1hIR1ykRctbQUZvLBwErW1'],
+  ['KILL TONY #487', 'https://open.spotify.com/episode/76OU3ziPNJMnM9zqFFVzXE'],
+  ['KILL TONY #486', 'https://open.spotify.com/episode/36hoyTASWgja9PToVt3XZG'],
+  ['KILL TONY #485', 'https://open.spotify.com/episode/0dHQFXHtiQus8D2rYQnEjV'],
+  ['KILL TONY #484', 'https://open.spotify.com/episode/7LG0n3m8riBr5nJegDeuoL'],
+  ['KILL TONY #483', 'https://open.spotify.com/episode/3GDpBOKJPsshYmhcX9HrZC'],
+  ['KILL TONY #482', 'https://open.spotify.com/episode/2M5ar9ZNacJFFuwrezbSyS'],
+  ['KILL TONY #481', 'https://open.spotify.com/episode/2gDHsTuFaBaKPKbSFzdDyW'],
+  ['KILL TONY #480', 'https://open.spotify.com/episode/6GSBFGy5BKftCLd44TvFnV'],
+  ['KILL TONY #479', 'https://open.spotify.com/episode/33QJAaeHzNmrKZCL2lpDhc'],
+  ['KILL TONY #478', 'https://open.spotify.com/episode/608kkCo6PyqXK7lf9eE335'],
+  ['KILL TONY #477', 'https://open.spotify.com/episode/5LM892IrUNnnAZTrdkftER'],
+  ['KILL TONY #476', 'https://open.spotify.com/episode/6DCBYVaVq5y6W0IeSHuHrx'],
+  ['KILL TONY #475', 'https://open.spotify.com/episode/6byRpoiRzkvaLVfBVXECb0'],
+  ['KILL TONY #474', 'https://open.spotify.com/episode/6OfaP3zvCGhYI2kPnBKQAW'],
+  ['KILL TONY #473', 'https://open.spotify.com/episode/6YcVEMgemXYhuZhv6vSheJ'],
+  ['KILL TONY #472', 'https://open.spotify.com/episode/4qXDvJBcLue5DfmqnOvu7g'],
+  ['KILL TONY #471', 'https://open.spotify.com/episode/0oP9Hs3Wy2THZo5kd3iy2u'],
+  [
+    'KILL TONY #470 – QUARANTINED #25',
+    'https://open.spotify.com/episode/3h0MvMNForkXmAlLduGgem',
+  ],
+  [
+    'KILL TONY #469 – QUARANTINED #24',
+    'https://open.spotify.com/episode/6iyN94Kl7hIeMh9j2Fj5h1',
+  ],
+  [
+    'KILL TONY #468 – QUARANTINED #23',
+    'https://open.spotify.com/episode/3tmvBIMtdvHVUBpMuWvVlv',
+  ],
+  [
+    'KILL TONY #467 – QUARANTINED #22',
+    'https://open.spotify.com/episode/3AacqI4QMGMVVeaHWm0wUd',
+  ],
+  [
+    'KILL TONY #466 – QUARANTINED #21',
+    'https://open.spotify.com/episode/4xRHS4gKzmE99ZVg347hyi',
+  ],
+  [
+    'KILL TONY #465 – QUARANTINED #20',
+    'https://open.spotify.com/episode/1uWFfsISyWkB4C7xdP6dOF',
+  ],
+  [
+    'KILL TONY #464 – QUARANTINED #19',
+    'https://open.spotify.com/episode/6NQh8SP0uxtYzCb76Egvpj',
+  ],
+  [
+    'KILL TONY #463 – QUARANTINED #18',
+    'https://open.spotify.com/episode/1rcIHfUceASVrcw5blE0Df',
+  ],
+  [
+    'KILL TONY #462 – QUARANTINED #17',
+    'https://open.spotify.com/episode/5j3KrzlDSHAVnZKZIPbgYl',
+  ],
+  [
+    'KILL TONY #461 – QUARANTINED #17',
+    'https://open.spotify.com/episode/3QGCWwVTaqVK1SdidEulVp',
+  ],
+  [
+    'KILL TONY #460 – QUARANTINED #15',
+    'https://open.spotify.com/episode/79eUYi7eIyuz58hZciswG2',
+  ],
+  [
+    'KILL TONY #459 – QUARANTINED #14',
+    'https://open.spotify.com/episode/4K9hs3mPf3C8bySSiLr4VO',
+  ],
+  [
+    'KILL TONY #458 – QUARANTINED #13',
+    'https://open.spotify.com/episode/5HCFmkg8x5v04HgtK0nA95',
+  ],
+  [
+    'KILL TONY #457 – QUARANTINED #12',
+    'https://open.spotify.com/episode/4cl08T3d0nJHKonEjPTN1x',
+  ],
+  [
+    'KILL TONY #456 – QUARANTINED #11',
+    'https://open.spotify.com/episode/40Rqf7za7T2zuDHHYb2pjv',
+  ],
+  [
+    'KILL TONY #455 – QUARANTINED #10',
+    'https://open.spotify.com/episode/54kG8qdFCktoe8vy6NEBoT',
+  ],
+  [
+    'KILL TONY #454 – QUARANTINED #9',
+    'https://open.spotify.com/episode/3hWCueVmXEE0d8YDdAJXOn',
+  ],
+  [
+    'KILL TONY #445 - VENTURA #2 (LOST EPISODE)',
+    'https://open.spotify.com/episode/3PaSJrtvlg7zAYjVfxsnco',
+  ],
+  [
+    'KILL TONY #453 – QUARANTINED #8',
+    'https://open.spotify.com/episode/1GmKiUdZYabLPM8KYHqV1r',
+  ],
+  [
+    'KILL TONY #452 – QUARANTINED #7',
+    'https://open.spotify.com/episode/71OmQs8vcF2BKiYsqESK3m',
+  ],
+  [
+    'KILL TONY #451 – QUARANTINED #6',
+    'https://open.spotify.com/episode/0DFWBcWPkNJS9MCqkOsMy8',
+  ],
+  [
+    'KILL TONY #450 – QUARANTINED #5',
+    'https://open.spotify.com/episode/3v3yAN8mO2k84oszqe6Wfb',
+  ],
+  [
+    'KILL TONY #449 – QUARANTINED #4',
+    'https://open.spotify.com/episode/6R3mVwWNdSBBTE6B75RFuX',
+  ],
+  [
+    'KILL TONY #448 – QUARANTINED #3',
+    'https://open.spotify.com/episode/3hbJCUuZD7BMZ4ZUYs94Dy',
+  ],
+  [
+    'KILL TONY #447 – QUARANTINED #2',
+    'https://open.spotify.com/episode/6PINNmJetiWtSrMWc5bzds',
+  ],
+  ['KILL TONY #446', 'https://open.spotify.com/episode/00RP97W30hLhx4a8FWflXG'],
+  ['KILL TONY #444', 'https://open.spotify.com/episode/0YlNBCrmzIErB0wRkwYzt1'],
+  ['KILL TONY #443', 'https://open.spotify.com/episode/7cJGVhQYuyGEM4C6GBKggV'],
+  [
+    'KILL TONY #442 - LA JOLLA #2',
+    'https://open.spotify.com/episode/73EljlNBwIZF3SmS7zH8I9',
+  ],
+  ['KILL TONY #441', 'https://open.spotify.com/episode/0Tr6oxyyvNo8DWAyEzucAu'],
+  ['KILL TONY #440', 'https://open.spotify.com/episode/1YWzAqamR8PMqvQj0l9fva'],
+  [
+    'KILL TONY #439 - SWANSEA',
+    'https://open.spotify.com/episode/47109Kr5B631opyKbTbO93',
+  ],
+  ['KILL TONY #438', 'https://open.spotify.com/episode/2o9sfIcQVeDdNldP8Rpmwy'],
+  ['KILL TONY #347', 'https://open.spotify.com/episode/3Ay7F7DufGLxpLZhzjIA5F'],
+  ['KILL TONY #436', 'https://open.spotify.com/episode/3j3SpbGZDOPfJOwsL5YNTJ'],
+  ['KILL TONY #435', 'https://open.spotify.com/episode/330NdEZOPWNyJQgCHBkvb6'],
+  ['KILL TONY #434', 'https://open.spotify.com/episode/1SoTI96C69UsuqCgLUjcrX'],
+  ['KILL TONY #433', 'https://open.spotify.com/episode/6lGbsi7BDele8SPSwLSaT1'],
+  ['KILL TONY #432', 'https://open.spotify.com/episode/609cSWCWe9K0s7wA5KkUct'],
+  ['KILL TONY #431', 'https://open.spotify.com/episode/0l4RZj6nZ3byX1udDiRI2d'],
+  ['KILL TONY #430', 'https://open.spotify.com/episode/6d75mTpi3OJjMirUZ5Zfpw'],
+  ['KILL TONY #429', 'https://open.spotify.com/episode/564nxzUFEm5ygXJOTSeP30'],
+  ['KILL TONY #428', 'https://open.spotify.com/episode/45PcZh4v62B2pM45cmTtcy'],
+  ['KILL TONY #427', 'https://open.spotify.com/episode/57CgPEmPQtC3JARFjqeMBW'],
+  ['KILL TONY #426', 'https://open.spotify.com/episode/6COBXUYortCsgjeMwJ9TQT'],
+  ['KILL TONY #425', 'https://open.spotify.com/episode/3MUEDl3c990bH9erqGDMQn'],
+  ['KILL TONY #424', 'https://open.spotify.com/episode/7IZVNsY7n1IHI9kyL2Nn1D'],
+  ['KILL TONY #423', 'https://open.spotify.com/episode/2gcY5cYfK0SB5irMRVN1hZ'],
+  ['KILL TONY #422', 'https://open.spotify.com/episode/66ecbRZnYUVgzOLCI9G0FF'],
+  [
+    'KILL TONY #421 - PITTSBURGH',
+    'https://open.spotify.com/episode/7snS8CjLD74MZi82k2eE9M',
+  ],
+  ['KILL TONY #420', 'https://open.spotify.com/episode/1nlhNQuMqNv41WwT2Dxmrl'],
+  ['KILL TONY #419', 'https://open.spotify.com/episode/5UmvcbJsdYHr0ZaTpdSvGM'],
+  ['KILL TONY #418', 'https://open.spotify.com/episode/2dSacY9MlrMiNIHr1KeXXq'],
+  ['KILL TONY #417', 'https://open.spotify.com/episode/2urh6DKm14No12NNtlrBed'],
+  ['KILL TONY #416', 'https://open.spotify.com/episode/4DjbYsnzo5rxAEzGxIebsm'],
+  ['KILL TONY #415', 'https://open.spotify.com/episode/3FFIP9CZL9n6t1tN1Fze6Q'],
+  ['KILL TONY #414', 'https://open.spotify.com/episode/3I0eSeT0a3FBw3u3Mqq2aK'],
+  ['KILL TONY #413', 'https://open.spotify.com/episode/55hRpq5zbQLYnjKNmHUvFT'],
+  ['KILL TONY #412', 'https://open.spotify.com/episode/6NB92GEOvclfVcO9kLHMke'],
+  ['KILL TONY #411', 'https://open.spotify.com/episode/3DDnus9ja0IKB2Wzi9apAr'],
+  ['KILL TONY #410', 'https://open.spotify.com/episode/0ufDpVDW2lKlIxd9IQocuC'],
+  ['KILL TONY #409', 'https://open.spotify.com/episode/7IrckRRsAIr0C9fS2BwYyN'],
+  ['KILL TONY #408', 'https://open.spotify.com/episode/2WGz4RMHICM9WB2kAjBLLX'],
+  ['KILL TONY #407', 'https://open.spotify.com/episode/5TZUhhjMG061rn8Q2zKK9k'],
+  ['KILL TONY #406', 'https://open.spotify.com/episode/6RqRH1GjJMfWEPrOne8jBs'],
+  ['KILL TONY #405', 'https://open.spotify.com/episode/1uruCWYPKj1e7LfzAIvcN5'],
+  ['KILL TONY #404', 'https://open.spotify.com/episode/6xH86uKgmvgjaAdPiaMBj6'],
+  ['KILL TONY #403', 'https://open.spotify.com/episode/06bP094ucKiw8eAZ8xm3YD'],
+  ['KILL TONY #402', 'https://open.spotify.com/episode/3HZPRL8SpXxtmIJvPnhqTC'],
+  ['KILL TONY #401', 'https://open.spotify.com/episode/1FJPSioMahxM7GP1tUEYjR'],
+  ['KILL TONY #400', 'https://open.spotify.com/episode/6cFENM8yzrSlFhQ6qc4VWW'],
+  ['KILL TONY #399', 'https://open.spotify.com/episode/7oc2FSLVdlXmaIN39n1g2n'],
+  [
+    'KILL TONY #397 - DALLAS #2',
+    'https://open.spotify.com/episode/0DXTqlPPJ6M6GaHxQl0fkT',
+  ],
+  [
+    'KILL TONY #396 - DALLAS #1',
+    'https://open.spotify.com/episode/3zoLZNG6L2HVQRu4Itectn',
+  ],
+  ['KILL TONY #395', 'https://open.spotify.com/episode/0Ax20AlUk0uIhW62auX1Du'],
+  ['KILL TONY #394', 'https://open.spotify.com/episode/51Y5tNbFHm7KltRtgFWvYs'],
+  [
+    'KILL TONY #393 - LA JOLLA #2',
+    'https://open.spotify.com/episode/6hbJ2pwRsjdThAZE69un4j',
+  ],
+  [
+    'KILL TONY #392 - LA JOLLA #1',
+    'https://open.spotify.com/episode/36ZOGCE0p0oMpNbbqwBYQF',
+  ],
+  ['KILL TONY #391', 'https://open.spotify.com/episode/2GPLZHK7RT2iez6vn8caB4'],
+  ['KILL TONY #390', 'https://open.spotify.com/episode/2lnRW86BCK4u6QtoqLR5pt'],
+  ['KILL TONY #389', 'https://open.spotify.com/episode/6WOriopulhhJuTemsQh8Sy'],
+  ['KILL TONY #388', 'https://open.spotify.com/episode/0kfSGpqiX2Axuo8289TKH8'],
+  ['KILL TONY #387', 'https://open.spotify.com/episode/3qftKTWqpjZzjOdK8RhQBl'],
+  ['KILL TONY #386', 'https://open.spotify.com/episode/2vCslZfk0pX3rDTYdG6yEh'],
+  ['KILL TONY #385', 'https://open.spotify.com/episode/49uTFZJm366WvrngsFKeVZ'],
+  [
+    'KILL TONY #383 - FT WAYNE #2',
+    'https://open.spotify.com/episode/7L3eznDsbAv7auMBDZEMnw',
+  ],
+  [
+    'KILL TONY #383 - FT WAYNE #1',
+    'https://open.spotify.com/episode/7MlbNaFFEWPdRUrWfH2IA0',
+  ],
+  ['KILL TONY #381', 'https://open.spotify.com/episode/7Lt9JJRNQXHrqphAi7ajBk'],
+  ['KILL TONY #381', 'https://open.spotify.com/episode/5Z8dPyDTqHwIG18Eh0gmhk'],
+  [
+    'KILL TONY #380 - PHILADELPHIA',
+    'https://open.spotify.com/episode/74fUhI4gZPPGHtL7mz4iPf',
+  ],
+  ['KILL TONY #379', 'https://open.spotify.com/episode/0ot3IhqoB1Z6K57Iq2Y6TC'],
+  ['KILL TONY #378', 'https://open.spotify.com/episode/75PSHf3DzGDlnoPtDtzN5d'],
+  [
+    'KILL TONY #377 - FT WORTH',
+    'https://open.spotify.com/episode/3OSgWowTsHmNHV4TrJfwvz',
+  ],
+  [
+    'KILL TONY #376 - PLANO',
+    'https://open.spotify.com/episode/4tpum7q8fzJxAQTmViPXrl',
+  ],
+  ['KILL TONY #375', 'https://open.spotify.com/episode/7buJOeufOux4Nlx54AhN9I'],
+  ['KILL TONY #374', 'https://open.spotify.com/episode/4y8VcxBnSuBNttlvwy7ZeB'],
+  ['KILL TONY #373', 'https://open.spotify.com/episode/073a2Yc9chx7wXybq80kVc'],
+  [
+    'KILL TONY #372 - SKANKFEST #2',
+    'https://open.spotify.com/episode/3dpflTDOfjQTSsXrRhOQrf',
+  ],
+  [
+    'KILL TONY #371 - SKANKFEST #1',
+    'https://open.spotify.com/episode/7KdQgA6Mj81TURVgaAHnYv',
+  ],
+  [
+    'KILL TONY #370 - NYC #2',
+    'https://open.spotify.com/episode/0KPeNiHhJ00W4QuELjWqEh',
+  ],
+  [
+    'KILL TONY #369 - NEW YORK #1',
+    'https://open.spotify.com/episode/6ovJMRwFkKQb4nl8IoFs6e',
+  ],
+  [
+    'KILL TONY #368 - POUGHKEEPSIE',
+    'https://open.spotify.com/episode/66Fxbt5dW9mcfHQnM3501b',
+  ],
+  ['Kill Tony #367', 'https://open.spotify.com/episode/1cU0HQ5k9IwYYz77zsXbIn'],
+  [
+    'KILL TONY #366 - MINNEAPOLIS',
+    'https://open.spotify.com/episode/3fcB5mSozELtFV8nVEvNUK',
+  ],
+  [
+    'KILL TONY #365 - MADISON',
+    'https://open.spotify.com/episode/4UmGbxuo5XLdtWJq2oN1Ix',
+  ],
+  [
+    'KILL TONY #364 - CHICAGO',
+    'https://open.spotify.com/episode/6yJZaY1u2oktW7aKHuvy2C',
+  ],
+  [
+    'KILL TONY #363 - MILWAUKEE',
+    'https://open.spotify.com/episode/3m5dB8y3BRkjgLruXeFSKl',
+  ],
+  [
+    'KILL TONY #362 - APPLETON',
+    'https://open.spotify.com/episode/618amRymSvrYeDir4vso09',
+  ],
+  ['KILL TONY #361', 'https://open.spotify.com/episode/4gGA2Glk7HLtDH3ilKeVNW'],
+  [
+    'KILL TONY #360 - Des Moines',
+    'https://open.spotify.com/episode/3OImuqQv5pIdLoodA6xYgA',
+  ],
+  [
+    'KILL TONY #359 - OMAHA',
+    'https://open.spotify.com/episode/7Irmie5zx5fkSq1MZ0NsEY',
+  ],
+  [
+    'KILL TONY #358 - KANSAS',
+    'https://open.spotify.com/episode/59MZETWFSFSkwNZg3JM9kW',
+  ],
+  ['KILL TONY #357', 'https://open.spotify.com/episode/48zj0nsy95BQiOxsqQIsg9'],
+  ['KILL TONY #356', 'https://open.spotify.com/episode/2LUslqVixBOEsySd8nn1hU'],
+  ['KILL TONY #355', 'https://open.spotify.com/episode/1lzOgFYncJy9mkfShTP8rs'],
+  [
+    'KILL TONY #354 - SEATTLE #2',
+    'https://open.spotify.com/episode/4olSk6FkwNrDam6lgbE901',
+  ],
+  [
+    'KILL TONY #353 - SEATTLE #1',
+    'https://open.spotify.com/episode/4dG3FRPOOAi8LJHDTbVctU',
+  ],
+  [
+    'KILL TONY #352 - VANCOUVER',
+    'https://open.spotify.com/episode/6rVC9DFLgL4ld8KvyrSzHe',
+  ],
+  [
+    'KILL TONY #351 - PORTLAND',
+    'https://open.spotify.com/episode/3npwXJyWKrAgsyLsL8XlFF',
+  ],
+  [
+    'KILL TONY #350 - SPOKANE',
+    'https://open.spotify.com/episode/0CjZAKtkBQoFpbX0MHTpMq',
+  ],
+  [
+    'KILL TONY #349 - BOISE',
+    'https://open.spotify.com/episode/4veXE3AIarWZCIWKZJsdB2',
+  ],
+  [
+    'KILL TONY #348 - SALT LAKE CITY',
+    'https://open.spotify.com/episode/6DrXgMVhIR9KyL6fXGNKry',
+  ],
+  ['KILL TONY #347', 'https://open.spotify.com/episode/0AFC9xaLccIImzFg1CYSUA'],
+  [
+    'KILL TONY #346 - LAS VEGAS',
+    'https://open.spotify.com/episode/2QeSZAOsUIUhLTAqglbb4V',
+  ],
+  [
+    'KILL TONY #345 - PHOENIX',
+    'https://open.spotify.com/episode/6ju65oWP5o4LbDtPcItC6b',
+  ],
+  ['KILL TONY #344', 'https://open.spotify.com/episode/6h2nib5h56DSayGHKtUVJR'],
+  ['KILL TONY #343', 'https://open.spotify.com/episode/1ZmZLyrm8uUYzAlgLdwAx7'],
+  [
+    'KILL TONY #342 - LA JOLLA #2',
+    'https://open.spotify.com/episode/0HXVWZE4VfPbffi0okeOlY',
+  ],
+  ['KILL TONY #341', 'https://open.spotify.com/episode/5G4XxNqMY5ERZpkSsUCzCP'],
+  ['KILL TONY #340', 'https://open.spotify.com/episode/1cAqQg52VF6FIcsWu9EetE'],
+  ['KILL TONY #339', 'https://open.spotify.com/episode/2rk8wrQFWDhIcujxLRCoFC'],
+  [
+    'KILL TONY #338 - WEST NYACK',
+    'https://open.spotify.com/episode/7hFSpXWJYWKXIHOJ38l5Fx',
+  ],
+  ['KILL TONY #337', 'https://open.spotify.com/episode/6TV7IS8ivBHCFfZG2zRObL'],
+  [
+    'KILL TONY #336 - ST LOUIS',
+    'https://open.spotify.com/episode/0GNP6yBeX7yBghnm7vxrUF',
+  ],
+  ['KILL TONY #335', 'https://open.spotify.com/episode/4tX21x7iRS98XS0EEGkZPK'],
+  [
+    'KILL TONY #334 - VENTURA',
+    'https://open.spotify.com/episode/1hdnxDQMwIdJjj3QjGvfs4',
+  ],
+  ['KILL TONY #333', 'https://open.spotify.com/episode/3T0WwVYxgCmfLjq1GbbBtg'],
+  [
+    'KILL TONY #332 - PHILADELPHIA #3',
+    'https://open.spotify.com/episode/0rokZvz0O5ethuXD3Srsp3',
+  ],
+  [
+    'KILL TONY #331 - PHILADELPHIA #2',
+    'https://open.spotify.com/episode/0etBlyoaYlm3HbVN9YDQCC',
+  ],
+  [
+    'KILL TONY #330 - PHILADELPHIA',
+    'https://open.spotify.com/episode/3QVjCCubxTVlSm7Dbb6Lde',
+  ],
+  ['KILL TONY #329', 'https://open.spotify.com/episode/11szh4JJGY6kaXf1OiRgoA'],
+  ['KILL TONY #328', 'https://open.spotify.com/episode/2w9p7k6krQ0xYifS5mI2rh'],
+  [
+    'KILL TONY #327 - LONDON',
+    'https://open.spotify.com/episode/5fuh4kDVlBQeJzgoaQZNFJ',
+  ],
+  [
+    'KiLL TONY #326 - MANCHESTER',
+    'https://open.spotify.com/episode/0yWA4LbekE6Y5kGvui0f8M',
+  ],
+  ['KILL TONY #325', 'https://open.spotify.com/episode/3Ydmacjhblro3vkJ9Aw5qG'],
+  ['KILL TONY #324', 'https://open.spotify.com/episode/6yOiW5M4JHGRIpFPUzftce'],
+  ['KILL TONY #323', 'https://open.spotify.com/episode/30Wp1Ncnl7pzYpkw3Xodvq'],
+  ['KILL TONY #322', 'https://open.spotify.com/episode/07f0eTO1XIBNNiHo2KYPAt'],
+  [
+    'KILL TONY #321 (PHOENIX)',
+    'https://open.spotify.com/episode/45WSUc7lmIVDLakGIR9EOh',
+  ],
+  ['KILL TONY #320', 'https://open.spotify.com/episode/7m9Y84fyqstn0IX8RyT7bX'],
+  ['KILL TONY #319', 'https://open.spotify.com/episode/2Yd24tGsqKw5z8fSW3YQdq'],
+  [
+    'KILL TONY #318 - RALEIGH',
+    'https://open.spotify.com/episode/7kw88je9yAUVijJRlON25z',
+  ],
+  ['KILL TONY #317', 'https://open.spotify.com/episode/3ZOh4CxHkgjdGHlGXjfdrH'],
+  ['KILL TONY #316', 'https://open.spotify.com/episode/0PNuKH6kj37iJC3zPjRoYD'],
+  ['KILL TONY #315', 'https://open.spotify.com/episode/37y62qbj0bX8KjiMdK07ac'],
+  ['KILL TONY #314', 'https://open.spotify.com/episode/6P8DF6SSBEbcUUAnaPT3Bw'],
+  ['KILL TONY #313', 'https://open.spotify.com/episode/7LVzwN1EpUk11AWhPNZaEP'],
+  ['KILL TONY #312', 'https://open.spotify.com/episode/63GTNziVY00C3klGSZzKvG'],
+  [
+    'KILL TONY #311 (FT WORTH)',
+    'https://open.spotify.com/episode/485L9ojJatLSOu2M0UEDlI',
+  ],
+  [
+    'KILL TONY #310 (HOUSTON)',
+    'https://open.spotify.com/episode/6AWbuhOGKNbB0rYv2IVtdy',
+  ],
+  [
+    'KILL TONY #309 (AUSTIN)',
+    'https://open.spotify.com/episode/09EIv64F068WhvI1HrH60w',
+  ],
+  [
+    'KILL TONY #308 (SAN ANTONIO)',
+    'https://open.spotify.com/episode/1MH8z5W3yEXjBJqIHZ37sP',
+  ],
+  ['KILL TONY #307', 'https://open.spotify.com/episode/0sxe1l2knfPwd4XOWfT4Kr'],
+  ['KILL TONY #306', 'https://open.spotify.com/episode/5B6cOgzx82reuH4qiswtXa'],
+  ['KILL TONY #305', 'https://open.spotify.com/episode/6UupGdObIffpF23jXZUpVb'],
+  ['KILL TONY #304', 'https://open.spotify.com/episode/5hmDlUplBH8dZ4vIePjrCd'],
+  ['KILL TONY #303', 'https://open.spotify.com/episode/4vt18pRpRJ5AQMs4bm9BF4'],
+  ['KILL TONY #302', 'https://open.spotify.com/episode/4Pfn6wqp3vCyDjG9CWo0bQ'],
+  ['KILL TONY #301', 'https://open.spotify.com/episode/4E4iCSinawYCo60ygzsCAm'],
+  ['KILL TONY #300', 'https://open.spotify.com/episode/46ldR0cNudtaC3X7SdulfU'],
+  ['KILL TONY #299', 'https://open.spotify.com/episode/4a1yjAsqjC0jnN5K6wgmQR'],
+  ['KILL TONY #298', 'https://open.spotify.com/episode/0oY8JwUh8QMeiN3VydhcML'],
+  ['KILL TONY #297', 'https://open.spotify.com/episode/4Bm8ngl3c4QPgxu1rwFClK'],
+  ['KILL TONY #296', 'https://open.spotify.com/episode/05ZqHQxs9jvjB4yDMyBEuV'],
+  [
+    'KILL TONY #295 (DETROIT)',
+    'https://open.spotify.com/episode/0PCTWEbnyT6mQfaXlPS7Ou',
+  ],
+  [
+    'KILL TONY #294 (GRAND RAPIDS)',
+    'https://open.spotify.com/episode/7ISaBKfj4fhWCmEV3rnCC6',
+  ],
+  [
+    'KILL TONY #293 (LANSING)',
+    'https://open.spotify.com/episode/59kOuLHIYZ49sCyGDQ35SL',
+  ],
+  ['KILL TONY #292', 'https://open.spotify.com/episode/2cQD2JWpLWsXpsJ2I8JaEM'],
+  ['KILL TONY #291', 'https://open.spotify.com/episode/3F2iZ7vUOSPpmkdjtZiauB'],
+  ['KILL TONY #290', 'https://open.spotify.com/episode/19iyxBRVtD5yIiO7yMc2lT'],
+  ['KILL TONY #289', 'https://open.spotify.com/episode/4DeJUW37hFbHvuhHzjhy1Q'],
+  ['KILL TONY #288', 'https://open.spotify.com/episode/6KVqfhSCphlmyCy4MxvijS'],
+  ['KILL TONY #287', 'https://open.spotify.com/episode/3Psr912iBo6ErDkZKiPJMd'],
+  [
+    'KILL TONY #286 (NASHVILLE)',
+    'https://open.spotify.com/episode/4nRQf7KikTTQdh6goyxG7d',
+  ],
+  ['KILL TONY #285', 'https://open.spotify.com/episode/35uuAgEuz4IHw2jx3f1qNA'],
+  [
+    'KILL TONY #284 (FT WAYNE)',
+    'https://open.spotify.com/episode/0ac1tCYqx5o8yVwNYEAutC',
+  ],
+  [
+    'KILL TONY #283 (CINCINNATI)',
+    'https://open.spotify.com/episode/09rmZcWNMdyvcJc7QsMwSS',
+  ],
+  [
+    'KILL TONY #282 (CLEVELAND)',
+    'https://open.spotify.com/episode/7cPt38fbaFZX0I3kZRFih8',
+  ],
+  ['KILL TONY #281', 'https://open.spotify.com/episode/6Jj5N4h9noCY9Oo6iJjPd7'],
+  ['KILL TONY #280', 'https://open.spotify.com/episode/0UunVKrNnAE0wuZKennbrw'],
+  ['KILL TONY #279', 'https://open.spotify.com/episode/5C3t7le1Yn3EYC1p5b7lLB'],
+  ['KILL TONY #278', 'https://open.spotify.com/episode/2niqc4NhDGWNsF4XM6MPmO'],
+  ['KILL TONY #277', 'https://open.spotify.com/episode/1LqVG0gdUugxJwT7uFzpz7'],
+  ['KILL TONY #276', 'https://open.spotify.com/episode/3hsGIYtPMMGIsHdcAAh5sP'],
+  ['KILL TONY #275', 'https://open.spotify.com/episode/72xh9voe5kDG53w9kRpyDK'],
+  ['KILL TONY #274', 'https://open.spotify.com/episode/3WlXZVf2ANCmTixXP0t3HN'],
+  [
+    'KILL TONY #273 (5 YEAR SPECIAL)',
+    'https://open.spotify.com/episode/1ypRoRVCHpCme4D7rBaRUP',
+  ],
+  [
+    'KILL TONY #272 (PORTLAND)',
+    'https://open.spotify.com/episode/2JdDFEPbPT92gxnuglMxHZ',
+  ],
+  ['KILL TONY #271', 'https://open.spotify.com/episode/5EjmvDKkd75GRKJvBX17Cm'],
+  ['KILL TONY #270', 'https://open.spotify.com/episode/1QNyhudhumt0hsiYd2n4En'],
+  ['KILL TONY #269', 'https://open.spotify.com/episode/7z694WNb0ZHDBty5Ee2wNg'],
+  ['KILL TONY #268', 'https://open.spotify.com/episode/4h23arGrPAvaPyvdcAbrFR'],
+  ['KILL TONY #267', 'https://open.spotify.com/episode/54X3Q8HwJrH1P9IrRoyXZD'],
+  ['KILL TONY #266', 'https://open.spotify.com/episode/4L56dtolaaQ1H8m9Dohjg7'],
+  [
+    'KILL TONY #265 (VEGAS)',
+    'https://open.spotify.com/episode/1E2OWzKGpPMbhq6G19UHxR',
+  ],
+  ['KILL TONY #264', 'https://open.spotify.com/episode/7l7mYHZQ1BwnPhI2xenIse'],
+  ['KILL TONY #263', 'https://open.spotify.com/episode/7k3u6ofs64Xip2tppJ4s4r'],
+  ['KILL TONY #262', 'https://open.spotify.com/episode/2dpTaZ3lK0eXahR3aTJBsh'],
+  ['KILL TONY #261', 'https://open.spotify.com/episode/1rGUXJBAsqEx3ZKBoTxIuY'],
+  ['KILL TONY #260', 'https://open.spotify.com/episode/5EsniTEGT3XqlQSYUbmzy3'],
+  [
+    'KILL TONY #259 (PHOENIX)',
+    'https://open.spotify.com/episode/2VtyIvIt1Gbljvuzmjrq09',
+  ],
+  ['KILL TONY #258', 'https://open.spotify.com/episode/341dhsYB188Vca7QbwggDp'],
+  ['KILL TONY #257', 'https://open.spotify.com/episode/4UUE4tbNGEXzV8ODMXNW9S'],
+  ['KILL TONY #256', 'https://open.spotify.com/episode/6cNhy2PCRaT4b7LLidP5CY'],
+  ['KILL TONY #255', 'https://open.spotify.com/episode/4J1Xpp0H06Wk6OAesy47jC'],
+  ['KILL TONY #254', 'https://open.spotify.com/episode/4iEcVzZQ55lcGYCztf9bKo'],
+  ['KILL TONY #253', 'https://open.spotify.com/episode/3v3sV2l39mUTJw7ZKk7KnV'],
+  ['KILL TONY #252', 'https://open.spotify.com/episode/7wOfymg4HElibmVyRoij2S'],
+  ['KILL TONY #251', 'https://open.spotify.com/episode/5putkNhoEMCH4evNmbTAjY'],
+  ['KILL TONY #250', 'https://open.spotify.com/episode/0BEufysGFvhaxI9aWYIXSQ'],
+  [
+    'KILL TONY #249 (DALLAS)',
+    'https://open.spotify.com/episode/09YD8IE8N4fQq2zDhgHxz8',
+  ],
+  [
+    'KILL TONY #248 (HOUSTON)',
+    'https://open.spotify.com/episode/28UOQ0zpDEd9Jt7vlyOiLU',
+  ],
+  ['KILL TONY #247', 'https://open.spotify.com/episode/4IBAirfd0rG22tekF5md25'],
+  ['KILL TONY #246', 'https://open.spotify.com/episode/6i6EFkUOOX5woqDi5J8DRt'],
+  ['KILL TONY #245', 'https://open.spotify.com/episode/3uBLto8F0fmtM1ozWP9rZr'],
+  [
+    'KILL TONY #244 (KILL JEREMIAH)',
+    'https://open.spotify.com/episode/7N2PC0jEPHVfMe1B6jgquG',
+  ],
+  ['KILL TONY #243', 'https://open.spotify.com/episode/1gp8jK6aEWgH92GsirX8KS'],
+  ['KILL TONY #242', 'https://open.spotify.com/episode/0Dn9DmcqlCC3ohOe7eYDiR'],
+  ['KILL TONY #241', 'https://open.spotify.com/episode/2mr0W2gZUPd7xiYjzdUG3o'],
+  ['KILL TONY #240', 'https://open.spotify.com/episode/0ixzFCCu7ENCFQBDXBftWw'],
+  ['KILL TONY #239', 'https://open.spotify.com/episode/4n7vnFLRiFcnOBI7b9Homb'],
+  ['KILL TONY #238', 'https://open.spotify.com/episode/7Mi7QHfWdtdvsI8Cm2gCOL'],
+  ['KILL TONY #237', 'https://open.spotify.com/episode/5kr1nikImrQOAJLKEuVPPs'],
+  ['KILL TONY #236', 'https://open.spotify.com/episode/0SXzRwxhnWaEAQzpL9UaUG'],
+  ['KILL TONY #235', 'https://open.spotify.com/episode/2edhetdMWWhir3MTXVnbJt'],
+  ['KILL TONY #234', 'https://open.spotify.com/episode/3fIiHOSdzPjuwiph3dn9M7'],
+  ['KILL TONY #233', 'https://open.spotify.com/episode/7xgMRcKBkOC1lDoKZov0ho'],
+  ['KILL TONY #232', 'https://open.spotify.com/episode/2dxnuiAHQKD4j2ZN6Dm3ML'],
+  ['KILL TONY #231', 'https://open.spotify.com/episode/44c53qU52azR9Z1XgopUiv'],
+  ['KILL TONY #230', 'https://open.spotify.com/episode/5YBybf2L0KVX7eglt3JJUi'],
+  ['KILL TONY #229', 'https://open.spotify.com/episode/209b5scUnwktoUPRrzSEkT'],
+  ['KILL TONY #228', 'https://open.spotify.com/episode/679nFxEwGGIsghK0Wohwwz'],
+  ['KILL TONY #227', 'https://open.spotify.com/episode/18xa28jNYtvHffXWJnR9tg'],
+  ['KILL TONY #226', 'https://open.spotify.com/episode/0n2YAcefAglAgEelxmHsZ7'],
+  ['KILL TONY #225', 'https://open.spotify.com/episode/7I8aQY9YZlvYo9pjvQXJev'],
+  ['KILL TONY #224', 'https://open.spotify.com/episode/6k5zA9jroYVBkNUaXf0aDw'],
+  ['KILL TONY #223', 'https://open.spotify.com/episode/6cvvJYLBQKLce3Y3QJuZj9'],
+  ['KILL TONY #222', 'https://open.spotify.com/episode/1uoWXZHz45TBVJ0abojZBd'],
+  ['KILL TONY #221', 'https://open.spotify.com/episode/2cMNHktVskSlWUcfMLxHp4'],
+  ['KILL TONY #220', 'https://open.spotify.com/episode/1TtUNutvPdRnYhnPdYOCcM'],
+  ['KILL TONY #219', 'https://open.spotify.com/episode/06N7Y4mUV7nF66ltULTpDG'],
+  [
+    'KILL TONY #218 (2017 SKANKFEST NYC)',
+    'https://open.spotify.com/episode/5zvHPFcWDYNtKgU43xk4fd',
+  ],
+  ['KILL TONY #217', 'https://open.spotify.com/episode/77TO5eAowmDVbobmoKL48g'],
+  ['KILL TONY #216', 'https://open.spotify.com/episode/3gd8riTTrEuOTo2Ll8Snhm'],
+  ['KILL TONY #215', 'https://open.spotify.com/episode/3gctd84JhajA9LVSx9NU1H'],
+  ['KILL TONY #214', 'https://open.spotify.com/episode/0rJu5Oo5Ep9vKD8RfohWZi'],
+  ['KILL TONY #213', 'https://open.spotify.com/episode/66w4mCPpI36VspxHAXMJH0'],
+  ['KILL TONY #212', 'https://open.spotify.com/episode/02UqMDuEF8BpEHjZ0INMFI'],
+  ['KILL TONY #211', 'https://open.spotify.com/episode/0OVcnoNoBGlsOdZjtJ5KJO'],
+  ['KILL TONY #210', 'https://open.spotify.com/episode/39xMbtsWA5XVYgMS5Lp1uu'],
+  ['KILL TONY #209', 'https://open.spotify.com/episode/6Z7rZTna3rQrzRdAEUyA0W'],
+  [
+    'KILL TONY #208 (HOUSTON)',
+    'https://open.spotify.com/episode/5EzPhTSrc55ALGRwgPBxUB',
+  ],
+  [
+    'KILL TONY #207 (AUSTIN)',
+    'https://open.spotify.com/episode/0l2hukL0ZHYVfO8h9PimvY',
+  ],
+  ['KILL TONY #206', 'https://open.spotify.com/episode/6E1JgUMkEqNxy5y9KkcEHC'],
+  ['KILL TONY #205', 'https://open.spotify.com/episode/78tT75up7NxqRhsckL7Ahy'],
+  ['KILL TONY #204', 'https://open.spotify.com/episode/5cZZdyRLiB9DK2Izq0smU3'],
+  ['KILL TONY #203', 'https://open.spotify.com/episode/4xlH43JDYXuDU4gfsSUHHR'],
+  ['KILL TONY #202', 'https://open.spotify.com/episode/1IGV1jxbxkdKC3NhCdFzDH'],
+  ['KILL TONY #201', 'https://open.spotify.com/episode/0hkQqtNMgYjRqNsGWfA0e0'],
+  ['KILL TONY #200', 'https://open.spotify.com/episode/191k1mKqSU3AuFiojuk0Ml'],
+  ['KILL TONY #199', 'https://open.spotify.com/episode/2xw3n5NuwROgIPhv4aqvFw'],
+  ['KILL TONY #198', 'https://open.spotify.com/episode/5wuEPAdWk8IGVadhDvUbSo'],
+  ['KILL TONY #197', 'https://open.spotify.com/episode/6XZj99IKVoVcF1Q6ETYKG1'],
+  ['KILL TONY #196', 'https://open.spotify.com/episode/43sEC0W6X3DyecSEV37L4j'],
+  ['KILL TONY #195', 'https://open.spotify.com/episode/7DYpuwCYPqNbfhusINCMUH'],
+  ['KILL TONY #194', 'https://open.spotify.com/episode/1QtaraAMGkBbng26SP00ec'],
+  ['KILL TONY #193', 'https://open.spotify.com/episode/6CGsGTnIL09LT6BAxInxf9'],
+  ['KILL TONY #192', 'https://open.spotify.com/episode/3GBp3Bx6k2Oonpu0Ia92d4'],
+  ['KILL TONY #191', 'https://open.spotify.com/episode/5aYdJFUNXwygq4QNkoAfAT'],
+  ['KILL TONY #190', 'https://open.spotify.com/episode/7pySK7WoQXnjzCO0lnHEyb'],
+  ['KILL TONY #189', 'https://open.spotify.com/episode/5MEgI2C5jVGZnas8H5wqtM'],
+  ['KILL TONY #188', 'https://open.spotify.com/episode/59JFemrnCFRyXcuNySmE4v'],
+  ['KILL TONY #187', 'https://open.spotify.com/episode/0nvxoLjmQCq2NRFyYMBsRv'],
+  ['KILL TONY #186', 'https://open.spotify.com/episode/4bwb4HOpJmPUuBjCFDYfGJ'],
+  ['KILL TONY #185', 'https://open.spotify.com/episode/1me62or0IJkjgEnvwzS6sS'],
+  ['KILL TONY #184', 'https://open.spotify.com/episode/5jHs7YRDTTHdChwuSJWbaQ'],
+  ['KILL TONY #183', 'https://open.spotify.com/episode/6MhMW5RncgJqf4iHhwxQ88'],
+  ['KILL TONY #182', 'https://open.spotify.com/episode/3FXwT0VVwsOUh0RCCevSwx'],
+  ['KILL TONY #181', 'https://open.spotify.com/episode/5VsylMpv2YZfclLEwfp60c'],
+  ['KILL TONY #180', 'https://open.spotify.com/episode/1XxExKyStImugxftJrV7wi'],
+  ['KILL TONY #179', 'https://open.spotify.com/episode/2uQvmftr11SuR5DEigymGr'],
+  ['KILL TONY #178', 'https://open.spotify.com/episode/2R4uqqOD8sNGVN3UBVrqNn'],
+  ['KILL TONY #177', 'https://open.spotify.com/episode/08IRYTdd3ng0vrCEMSfYbP'],
+  ['KILL TONY #176', 'https://open.spotify.com/episode/4QLWW8WNpimxtOAk4HcqVS'],
+  ['KILL TONY #175', 'https://open.spotify.com/episode/3R8D4qlsso4jQcr0mlSS2v'],
+  ['KILL TONY #174', 'https://open.spotify.com/episode/0IRHuEnMv2T5IWB6n2KEGm'],
+  ['KILL TONY #173', 'https://open.spotify.com/episode/44i8rBAt1hxEurQNiu3wQa'],
+  ['KILL TONY #172', 'https://open.spotify.com/episode/0yc9xX7GrbKvrFgNMX5UFT'],
+  ['KILL TONY #171', 'https://open.spotify.com/episode/6ccOGJ0W4N1jfnCBGQmWqs'],
+  ['KILL TONY #170', 'https://open.spotify.com/episode/2FMFzGfMRYrNMV5kbB3WG7'],
+  ['KILL TONY #169', 'https://open.spotify.com/episode/5u93IIamHHfB5CiXXEJR2R'],
+  ['KILL TONY #168', 'https://open.spotify.com/episode/0NhvPJLbCMXD9oSOoYPEN0'],
+  ['KILL TONY #167', 'https://open.spotify.com/episode/77WjhpqJ4QKYlD9bCtMhjr'],
+  ['KILL TONY #166', 'https://open.spotify.com/episode/4ht4Vz3YZHIDmRa2z4IPWb'],
+  ['KILL TONY #165', 'https://open.spotify.com/episode/6y1CRfZSbjIOAH4ttvQp0U'],
+  ['KILL TONY #164', 'https://open.spotify.com/episode/0zIJuVSucdEKoVKWpSKuTN'],
+  ['KILL TONY #163', 'https://open.spotify.com/episode/6fBwfDejUhglyLFW9bJztS'],
+  ['KILL TONY #162', 'https://open.spotify.com/episode/6R44PjeLfNigv8VpuT9uMe'],
+  ['KILL TONY #161', 'https://open.spotify.com/episode/6f5SyjqPuy30ZtHqHOIWWg'],
+  ['KILL TONY #160', 'https://open.spotify.com/episode/4SAjdgpN1p47fXjclqgckS'],
+  ['KILL TONY #159', 'https://open.spotify.com/episode/2mDukNRxngKDhnPzv6skLe'],
+  ['KILL TONY #158', 'https://open.spotify.com/episode/7yaONal7LFGCGWMy6GhOGd'],
+  ['KILL TONY #157', 'https://open.spotify.com/episode/4hZj8a3k6mg7z2rwMLxTvV'],
+  ['KILL TONY #156', 'https://open.spotify.com/episode/3jzszKyUAJTTiDvStDmYd2'],
+  ['KILL TONY #155', 'https://open.spotify.com/episode/5ijVxYgtqHhcFN7Gb0UsN5'],
+  ['KILL TONY #154', 'https://open.spotify.com/episode/2M2u1c6RCSvG9PiKIEvaew'],
+  ['KILL TONY #153', 'https://open.spotify.com/episode/2jQZg1ELv3j18sNZvCjYn3'],
+  ['KILL TONY #152', 'https://open.spotify.com/episode/6jKweJGpfVbfufDo9KkDAz'],
+  ['KILL TONY #151', 'https://open.spotify.com/episode/7pCfzJblHbtcDM2tvXAJRe'],
+  ['KILL TONY #150', 'https://open.spotify.com/episode/2mRoilbxjzbPykvS9wyGgW'],
+  ['KILL TONY #149', 'https://open.spotify.com/episode/70bNewCqAWIwK7UtbPOg1F'],
+  ['KILL TONY #148', 'https://open.spotify.com/episode/5bQIuzxXuj5WnSsnZOBJaB'],
+  ['KILL TONY #147', 'https://open.spotify.com/episode/39uIWJzJkApe8NTAaiCYOX'],
+  ['KILL TONY #146', 'https://open.spotify.com/episode/3ptuDNYQcEei67V8wKnvLY'],
+  ['KILL TONY #145', 'https://open.spotify.com/episode/64we8dDZQnnSAYOyOPPco5'],
+  ['KILL TONY #144', 'https://open.spotify.com/episode/5zzswv4C61OpAyackIoAKu'],
+  ['KILL TONY #143', 'https://open.spotify.com/episode/4ELj5ZRffXBKLiMhSTqYO6'],
+  ['KILL TONY #142', 'https://open.spotify.com/episode/6yL8JPDNfuhRGRO3MyiCf6'],
+  ['KILL TONY #141', 'https://open.spotify.com/episode/6O1qd6BAUZwgpHF2SHI3Yo'],
+  ['KILL TONY #140', 'https://open.spotify.com/episode/6D7SIo6pR0wmSOayx3xxLP'],
+  ['KILL TONY #139', 'https://open.spotify.com/episode/4YfgmGc3mgJLcTtxEnhI5I'],
+  [
+    'KILL TONY #138 (AUSTIN)',
+    'https://open.spotify.com/episode/0Qosb8NhAqGAOW5iWpQLW5',
+  ],
+  [
+    'KILL TONY #137 (AUSTIN)',
+    'https://open.spotify.com/episode/3remsOxtigemgDBjcgUJj0',
+  ],
+  ['KILL TONY #136', 'https://open.spotify.com/episode/78IMvpCBv8VlWVQWM1U6Wl'],
+  ['KILL TONY #135', 'https://open.spotify.com/episode/55FEn8M98lH98hrxuYZKMY'],
+  ['KILL TONY #134', 'https://open.spotify.com/episode/0v4W9Y8jhv2YPzqmx7y6mo'],
+  ['KILL TONY #133', 'https://open.spotify.com/episode/4YB5h8eypBsnssW2TQnd8G'],
+  ['KILL TONY #132', 'https://open.spotify.com/episode/01nJSFwRRQeJrxrLAZenIt'],
+  ['KILL TONY #131', 'https://open.spotify.com/episode/2mtTHl6eeae60VD9digBDC'],
+  ['KILL TONY #130', 'https://open.spotify.com/episode/7zwuSx5EvMr5yrBkNHHmlH'],
+  ['KILL TONY #129', 'https://open.spotify.com/episode/3EKZWUeBTkwkBpNHnuuhGt'],
+  ['KILL TONY #128', 'https://open.spotify.com/episode/4B4kydVDlcTMo6vb7qW84n'],
+  ['KILL TONY #127', 'https://open.spotify.com/episode/1DqAEOnwoaZS4yLXH78BU0'],
+  ['KILL TONY #126', 'https://open.spotify.com/episode/720bnPK9SgDbDBD8f1XAip'],
+  ['KILL TONY #125', 'https://open.spotify.com/episode/3myff5xdRnOF3XUPDLNEbb'],
+  ['KILL TONY #124', 'https://open.spotify.com/episode/5ij2IcivYrFpwmGIcTkfWF'],
+  ['KILLTONY #123', 'https://open.spotify.com/episode/0bz2QjJ7NlAV2t00GsVRTV'],
+  ['KILL TONY #122', 'https://open.spotify.com/episode/0Nf0HmDY1SnZc2fVsE7ZhP'],
+  ['KILL TONY #121', 'https://open.spotify.com/episode/7MECw9YCXXwrJW1SkwhRNS'],
+  ['KILL TONY #120', 'https://open.spotify.com/episode/0fYD5eGSIZExzvaLB3nMs6'],
+  ['KILL TONY #119', 'https://open.spotify.com/episode/7A0FFZk4qTjX0peT8f7avc'],
+  ['KILL TONY #118', 'https://open.spotify.com/episode/1U9YbzQaqjlXHVCkpDeWWv'],
+  ['KILL TONY #117', 'https://open.spotify.com/episode/6oAOQEnayyketAGGhlrgrz'],
+  ['KILL TONY #116', 'https://open.spotify.com/episode/0H3ywTnErFygFaEDms8l7V'],
+  ['KILL TONY #115', 'https://open.spotify.com/episode/7fcrpfuxcSch4DxGl1dx8r'],
+  ['KILL TONY #114', 'https://open.spotify.com/episode/7tkOhFwjAHIXQHhm6J2zQH'],
+  ['KILL TONY #113', 'https://open.spotify.com/episode/6HRui389MxxYPhtYA3oRvK'],
+  ['KILL TONY #112', 'https://open.spotify.com/episode/5CvT2EEgqQDBbN35R2ysLs'],
+  ['KILL TONY #111', 'https://open.spotify.com/episode/7JwBh9MA4i92utdQQCffLH'],
+  ['KILL TONY #110', 'https://open.spotify.com/episode/0BZfpPcNaHqAk0FXfhdISu'],
+  ['KILL TONY #109', 'https://open.spotify.com/episode/1AUHA6UCMz08kEtDSLVeLR'],
+  ['KILL TONY #108', 'https://open.spotify.com/episode/0Ai4Fxdx4yZrmVtDX7VXOd'],
+  ['KILL TONY #107', 'https://open.spotify.com/episode/01c7Rue6KSN6pccG9pmTT4'],
+  ['KILL TONY #106', 'https://open.spotify.com/episode/1g2PjXDwyH14XBJ3GUF8hY'],
+  ['KILL TONY #105', 'https://open.spotify.com/episode/3InXvYlR86iWqahGex7xMr'],
+  ['KILL TONY #104', 'https://open.spotify.com/episode/75yweHZgK5Qp5YmT8SRQKV'],
+  ['KILL TONY #103', 'https://open.spotify.com/episode/3ovWzMQptvF9JBY6VPM8Nf'],
+  ['KILL TONY #102', 'https://open.spotify.com/episode/46prXA0p4JD1CoWeFy4ps3'],
+  ['KILL TONY #101', 'https://open.spotify.com/episode/0KqK51mcBvBE1nXvfjKLFk'],
+  ['KILL TONY #100', 'https://open.spotify.com/episode/2OfSBEBXJt3auWnfVQCuog'],
+  ['KILL TONY #99', 'https://open.spotify.com/episode/6i7NaSz48gMEhwSxR80QuP'],
+  ['KILL TONY #98', 'https://open.spotify.com/episode/1ahwexpLlLAN8mIPTmnz0d'],
+  ['KILL TONY #97', 'https://open.spotify.com/episode/33jfC12bvS6XsjWqYUpw7O'],
+  ['KILL TONY #96', 'https://open.spotify.com/episode/7Hcn85IcWuZoTurMpuYVpX'],
+  ['KILL TONY #95', 'https://open.spotify.com/episode/0byOAy0wOs0RKVLoPsY49q'],
+  ['KILL TONY #94', 'https://open.spotify.com/episode/69lclBPvc0IZoNXhYAqv8l'],
+  ['KILL TONY #93', 'https://open.spotify.com/episode/4oYX6zudmTjxwkFilEle6a'],
+  ['KILL TONY #92', 'https://open.spotify.com/episode/43cKcH75cjTV0Ij9hf2RF9'],
+  ['KILL TONY #91', 'https://open.spotify.com/episode/1NY3MFQkC6xxSE5h64uX0e'],
+  ['KILL TONY #90', 'https://open.spotify.com/episode/43dybNwW1Gv0QzVRn0B2ni'],
+  ['KILL TONY #89', 'https://open.spotify.com/episode/3A66I1cgypENDMa03VIS0u'],
+  ['KILL TONY #88', 'https://open.spotify.com/episode/0uK80UX58WWM6YUvCf5mk2'],
+  ['KILL TONY #87', 'https://open.spotify.com/episode/7BjKNf91Y9mf5CqSgal2xm'],
+  ['KILL TONY #86', 'https://open.spotify.com/episode/3PoN7PbRjKmJyPcPPVPmSn'],
+  ['KILL TONY #85', 'https://open.spotify.com/episode/5It7cjF7qW8jksx59elU8G'],
+  ['KILL TONY #84', 'https://open.spotify.com/episode/3bu6iJouB3u0szLF3rpncw'],
+  ['KILL TONY #83', 'https://open.spotify.com/episode/6eLpUVeVCAmC24MVgycwUV'],
+  ['KILL TONY #82', 'https://open.spotify.com/episode/3SBBsrox6yLNLTDphC45zw'],
+  ['KILL TONY #81', 'https://open.spotify.com/episode/239gvoza5lxXw5zXr236HB'],
+  ['KILL TONY #80', 'https://open.spotify.com/episode/6R3sofx2N7yxwKDAVPZT6K'],
+  ['KILL TONY #79', 'https://open.spotify.com/episode/6dF0bVcLsvB9rYq3ZW5P6p'],
+  [
+    'KILL TONY #78: LIVE FROM TORONTO!',
+    'https://open.spotify.com/episode/2y1ftSzAJDw78kl7VIz9Qq',
+  ],
+  ['KILL TONY #77', 'https://open.spotify.com/episode/2MbLerAEIHxlxVlO1ZTDuG'],
+  ['KILL TONY #76', 'https://open.spotify.com/episode/7uUyt0l3FP4nWQDzNFpvaX'],
+  ['KILL TONY #75', 'https://open.spotify.com/episode/355SPCl75CA2qXWRjnurEE'],
+  ['KILL TONY #74', 'https://open.spotify.com/episode/5aGbN2hDmbLbexyiKtswAi'],
+  ['KILL TONY #73', 'https://open.spotify.com/episode/6FOsb1ehVBCZfEAYAA1JDS'],
+  ['KILL TONY #72', 'https://open.spotify.com/episode/5nVP9QVUiNuteqV9Nyed5y'],
+  ['KILL TONY #71', 'https://open.spotify.com/episode/3iUMy4E65GeYvvY8bW7ttt'],
+  ['KILL TONY #70', 'https://open.spotify.com/episode/1U3SNNZhMNLw04iINJvG7V'],
+  ['KILL TONY #69', 'https://open.spotify.com/episode/4F6Nnq4JO8cuXiW76GEkhI'],
+  ['KILL TONY #68', 'https://open.spotify.com/episode/2xQ8v9BCvM0v1V7BYt0Hmz'],
+  ['KILL TONY #67', 'https://open.spotify.com/episode/4S3Y03rDNyvMArfDF2XdJf'],
+  ['KILL TONY #66', 'https://open.spotify.com/episode/6jSywqGgQlvRvVdSqlnS2y'],
+  ['KILL TONY #65', 'https://open.spotify.com/episode/7F6TXNKat0hqExTC1pZ8yA'],
+  ['KILL TONY #64', 'https://open.spotify.com/episode/1UZ1atIAwIZvlv4xgKmSRY'],
+  ['KILL TONY #63', 'https://open.spotify.com/episode/56C0MVWUTNgRQgoeFkUb9H'],
+  [
+    'KILL TONY #62 (COMIC CON)',
+    'https://open.spotify.com/episode/4pxA2cDlNKHLlBySEZfuci',
+  ],
+  ['KILL TONY #61', 'https://open.spotify.com/episode/3janJaebazwg08bQbxN6JN'],
+  ['KILL TONY #60', 'https://open.spotify.com/episode/268NT0ZlDOWmMRvvPKsPTr'],
+  ['KILL TONY #59', 'https://open.spotify.com/episode/32447P1TXzkKkGYZJlpsNV'],
+  ['KILL TONY #58', 'https://open.spotify.com/episode/1ZYjbnGo2Rx1hd8lW009N8'],
+  ['KILL TONY #57', 'https://open.spotify.com/episode/2kR7cThfzJMRBjggQbsGGl'],
+  ['KILL TONY #56', 'https://open.spotify.com/episode/51gu2c68OaaT6zYDCWzjl4'],
+  ['KILL TONY #55', 'https://open.spotify.com/episode/4bxbJ26o5TDUVC9ePxveJY'],
+  ['KILL TONY #54', 'https://open.spotify.com/episode/5MyqlQho5PIZJY5lNxSZfj'],
+  ['KILL TONY #53', 'https://open.spotify.com/episode/0wTKsBfcpX8U9sZgwdVOuk'],
+  ['KILL TONY #52', 'https://open.spotify.com/episode/6IDHHfMPP7pogB27l5JKsv'],
+  ['KILL TONY #51', 'https://open.spotify.com/episode/2ICpBn8aqDHTOo35KoHnVk'],
+  ['KILL TONY #50', 'https://open.spotify.com/episode/6OQGfXi8IQqKCu3GjvDSXd'],
+  ['KILL TONY #49', 'https://open.spotify.com/episode/4gCwm6gTxXNEY6LPnecZMN'],
+  ['KILL TONY #48', 'https://open.spotify.com/episode/1C7jXHbN6W6mK1TEhBHM7a'],
+  ['KILL TONY #47', 'https://open.spotify.com/episode/4wKNjrlS3qnsGW2OeUHnrK'],
+  ['KILL TONY #46', 'https://open.spotify.com/episode/5qh1Rc5SBFqjMTE3een7Ma'],
+  ['KILL TONY #45', 'https://open.spotify.com/episode/0R3T47shEiJDFAscOJMjpA'],
+  ['KILL TONY #44', 'https://open.spotify.com/episode/1GRSzMzJrErnJ7erR78PWa'],
+  ['KILL TONY #43', 'https://open.spotify.com/episode/3IcizrfHEjmhlpKp81wdLr'],
+  ['KILL TONY #42', 'https://open.spotify.com/episode/0BQ9HG98zjXcX1mMYlC9b4'],
+  ['KILL TONY #41', 'https://open.spotify.com/episode/0W13E4UbsSUr0EO04ZvLdL'],
+  ['KILL TONY #40', 'https://open.spotify.com/episode/1cjPYtC1uCCjEpYo6ywSCB'],
+  ['KILL TONY #39', 'https://open.spotify.com/episode/6vXSEsmAokTHiEusDltNM7'],
+  ['KILL TONY #38', 'https://open.spotify.com/episode/79R08Q5FGtvCJtPADdILOV'],
+  ['KILL TONY #37', 'https://open.spotify.com/episode/5n1PXvID9hvfeyHzeGwed7'],
+  ['KILL TONY #36', 'https://open.spotify.com/episode/18WYPMv7Xziw3nJwYrhRZ8'],
+  ['KILL TONY #35', 'https://open.spotify.com/episode/2tbBgUEyrexPZ37ZfhlV4u'],
+  ['KILL TONY #34', 'https://open.spotify.com/episode/1fA5elYxDdvWIYCf2G0QKP'],
+  ['KILL TONY #33', 'https://open.spotify.com/episode/7a3qfiOUkbtB0zAzEKGljH'],
+  ['KILL TONY #32', 'https://open.spotify.com/episode/6rBp5jxJ1AZPCGxY6sVz2A'],
+  ['KILL TONY #31', 'https://open.spotify.com/episode/0AxgXA1jg1EODMiyOYc1mC'],
+  ['KILL TONY #30', 'https://open.spotify.com/episode/7K8RxFqYGLXRPAhyXazj4w'],
+  ['KILL TONY #29', 'https://open.spotify.com/episode/024csdnyypCubhUQKNrhUW'],
+  ['KILL TONY #28', 'https://open.spotify.com/episode/4CRNxfdk7TLz3Wf6HKCVrf'],
+  ['KILL TONY #27', 'https://open.spotify.com/episode/06c5EOliMQSA5bAeu1Ds5s'],
+  ['KILL TONY #26', 'https://open.spotify.com/episode/6UBfAuCYbO5D1EOVv0SJZP'],
+  ['KILL TONY #25', 'https://open.spotify.com/episode/78vgpIzmz8WU6e7THFLRVg'],
+  ['KILL TONY #24', 'https://open.spotify.com/episode/2h6gimhR1rc0JS8CglpTBt'],
+  ['KILL TONY #23', 'https://open.spotify.com/episode/3rHXhSNj5Pz5ZFMAnMkG8s'],
+  ['KILL TONY #22', 'https://open.spotify.com/episode/16VmfWGBpreVRD2okVxUAU'],
+  ['KILL TONY #21', 'https://open.spotify.com/episode/1MJds7VjvsyG1oNOVTI2BS'],
+  ['KILL TONY #20', 'https://open.spotify.com/episode/2GV90pDvJakKqHtADswUVm'],
+  ['KILL TONY #19', 'https://open.spotify.com/episode/002K614h1jp3mqZ0AH0AUs'],
+  ['KILL TONY #18', 'https://open.spotify.com/episode/7IzFRWVwtMBa9k4nZpK0HE'],
+  ['KILL TONY #17', 'https://open.spotify.com/episode/2LWlymVz0jC1cbixLAR5cz'],
+  ['KILL TONY #16', 'https://open.spotify.com/episode/1tZH5BMmzZ5BUgIj0w9lHa'],
+  ['KILL TONY #15', 'https://open.spotify.com/episode/0iTjQ2Mr1ZVXeH9YH42RLz'],
+  ['KILL TONY #14', 'https://open.spotify.com/episode/1T90HPxb7tzwIp8lI1OP0s'],
+  ['KILL TONY #13', 'https://open.spotify.com/episode/1eZoEAkJuZl3GB1EsTbD8d'],
+  ['KILL TONY #12', 'https://open.spotify.com/episode/6F9bw3pgnxkbcqXbpjmItL'],
+  ['KILL TONY #11', 'https://open.spotify.com/episode/1UJXzzfYptCEIVW5V68D0u'],
+  ['KILL TONY #10', 'https://open.spotify.com/episode/3t2DEQ81Jy4BIOEAZdJdjN'],
+  ['KILL TONY #9', 'https://open.spotify.com/episode/2x7v0PBIaVVXoEiwLzSRwz'],
+  ['KILL TONY #8', 'https://open.spotify.com/episode/6jtkMytPpkruTL6LR1UsD8'],
+  ['KILL TONY #7', 'https://open.spotify.com/episode/2ux7wWqNWEtgiVZDDKsVTb'],
+  ['KILL TONY #6', 'https://open.spotify.com/episode/1rPj5OwZLrLx2dreDd2XWA'],
+  ['KILL TONY #5', 'https://open.spotify.com/episode/0LsMLiqzORuCavOJyVNKUL'],
+  ['KILL TONY #4', 'https://open.spotify.com/episode/3G9uE2GVerJr17lHDOJCsI'],
+  ['KILL TONY #3', 'https://open.spotify.com/episode/3j3kxc9DmH9YUOLuHDks3u'],
+  ['KILL TONY #2', 'https://open.spotify.com/episode/2AHAlaKgjko4U3tIqcIptz'],
+  ['KILL TONY #1', 'https://open.spotify.com/episode/368pKGnQv8BxmVFMWPSGJ6'],
+];
+
+const prisma = global.prisma || new PrismaClient();
+
+(async function main() {
+  const episodes = await prisma.episode.findMany({
+    where: { spotifyUrl: null },
+  });
+  console.log(episodes.length);
+  const matches = episodes
+    .map((episode) => {
+      const match = spotifyData.find(([episodeTitle]) => {
+        const spotifyEpisodeNumber = episodeTitle.match(/#\d{1,}/)[0];
+        return (
+          episodeTitle === episode.title ||
+          episode.title.includes(spotifyEpisodeNumber)
+        );
+      });
+      if (!match) {
+        return null;
+      }
+      return {
+        episode,
+        match,
+      };
+    })
+    .filter((match) => match !== null);
+  console.log(matches);
+  // await Promise.all(
+  //   matches.map(async ({ episode, match }) => {
+  //     await prisma.episode.update({
+  //       where: { id: episode.id },
+  //       data: { spotifyUrl: match[1] },
+  //     });
+  //   }),
+  // );
+})();

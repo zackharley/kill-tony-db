@@ -2,19 +2,74 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL")
 }
 
-model users {
-  id        Int      @id @default(autoincrement())
+model Episode {
+  id            Int          @id @default(autoincrement())
+  title         String
+  airDate       DateTime?
+  recordingDate DateTime?
+  location      Location?    @relation(fields: [locationId], references: [id])
+  spotifyUrl    String?
+  youtubeUrl    String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @default(now())
+  appearances   Appearance[]
+  locationId    Int?
+}
+
+model Location {
+  id        Int       @id @default(autoincrement())
   name      String
-  email     String   @unique
-  image     String
-  createdAt DateTime @default(now())
+  episodes  Episode[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+}
+
+model Person {
+  id                 Int          @id @default(autoincrement())
+  name               String
+  bio                String?
+  isActiveRegular    Boolean      @default(false)
+  isHallofFameMember Boolean      @default(false)
+  facebookUrl        String?
+  hasGoldenTicket    Boolean      @default(false)
+  instagramUrl       String?
+  tiktokUrl          String?
+  twitterUrl         String?
+  websiteUrl         String?
+  youtubeUrl         String?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @default(now())
+  appearances        Appearance[]
+}
+
+model Appearance {
+  id               Int            @id @default(autoincrement())
+  episode          Episode        @relation(fields: [episodeId], references: [id])
+  episodeId        Int
+  person           Person         @relation(fields: [personId], references: [id])
+  personId         Int
+  youtubeTimestamp Int?
+  isStandupDebut   Boolean        @default(false)
+  type             AppearanceType
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @default(now())
+}
+
+enum AppearanceType {
+  band
+  regular
+  guest
+  host
+  bucket_pull
+  featured_set
+  other
 }
